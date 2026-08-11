@@ -7,6 +7,22 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ## [Unreleased]
 
+### Added
+
+- timepicker: The time can now be typed. The trigger is a row of focusable hour / minute / AM-PM fields instead of a button, each accepting digits (auto-advancing once no second digit could follow), Arrow keys to step, Home/End, Backspace to clear, and A/P to set the period. The dropdown is unchanged and stays in sync; `Alt`+`↓`/`↑` opens and closes it, and its clock button is out of the tab order so a form does not gain a stop per picker (upstream #385, declined there as needing "a complete rewrite of the component architecture")
+- timepicker: A typed time settles when focus leaves the field — minutes snap onto `Step` and a time outside `MinTime`/`MaxTime` is pulled to the nearer bound — so keyboard entry can only produce values the dropdown would also have offered
+- timepicker: `HourLabel`, `MinuteLabel`, `PeriodLabel`, `OpenLabel` and `DoneLabel` props, so the segments, the opener and the dropdown can be localized. The first two also title the dropdown's columns, which were previously hardcoded English
+
+### Changed
+
+- timepicker: **Breaking.** `Placeholder` is now the field's accessible name rather than visible text; an unset picker shows `--:--` like the native control. `ID` moves from the trigger button to the hour field, so a `<label for>` focuses it
+- timepicker: **Breaking.** The `[data-tui-timepicker-display]` span is gone, and `[data-tui-timepicker]` is now the field wrapper (a `div`) rather than a `button`
+
+### Fixed
+
+- popover, dropdown, selectbox, timepicker: The `:popover-open` guard added for old Safari called itself instead of `el.matches()`, so it recursed until the stack blew and the `catch` returned a flat `false`. In popover.js that left `isOpen()`, the open/close guards and the click-away check believing no popover is ever open; timepicker.js never routed through the guard at all (#583 follow-up)
+- timepicker: Writing the hidden input for a half-filled time no longer feeds its own `input` event back in and clears the segment that still held a value
+
 ## [v1.12.1] - 2026-06-28
 
 ### Fixed

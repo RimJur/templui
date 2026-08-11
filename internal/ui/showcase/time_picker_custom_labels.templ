@@ -1,0 +1,17 @@
+package showcase
+
+import "github.com/RimJur/templui/components/timepicker"
+
+templ TimePickerCustomLabels() {
+	<div class="w-full max-w-sm">
+		@timepicker.TimePicker(timepicker.Props{
+			Use12Hours:  true,
+			Placeholder: "Meeting time",
+			HourLabel:   "Stunde",
+			MinuteLabel: "Minute",
+			PeriodLabel: "Tageshälfte",
+			OpenLabel:   "Zeitauswahl öffnen",
+			DoneLabel:   "Fertig",
+		})
+	</div>
+}

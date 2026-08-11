@@ -28,8 +28,8 @@ templ TimePicker() {
 						Text: "With Label",
 					},
 					{
-						ID:   "custom-placeholder",
-						Text: "Custom Placeholder",
+						ID:   "custom-labels",
+						Text: "Custom Labels",
 					},
 					{
 						ID:   "selected-time",
@@ -48,6 +48,10 @@ templ TimePicker() {
 						Text: "Form Integration",
 					},
 				},
+			},
+			{
+				ID:   "keyboard",
+				Text: "Keyboard",
 			},
 			{
 				ID:   "api",
@@ -111,10 +115,10 @@ templ TimePicker() {
 					ID:              "with-label",
 				})
 				@modules.ExampleWrapper(modules.ExampleWrapperProps{
-					SectionName:     "With Custom Placeholder",
-					ShowcaseFile:    showcase.TimePickerCustomPlaceholder(),
-					PreviewCodeFile: "time_picker_custom_placeholder.templ",
-					ID:              "custom-placeholder",
+					SectionName:     "With Custom Labels",
+					ShowcaseFile:    showcase.TimePickerCustomLabels(),
+					PreviewCodeFile: "time_picker_custom_labels.templ",
+					ID:              "custom-labels",
 				})
 				@modules.ExampleWrapper(modules.ExampleWrapperProps{
 					SectionName:     "With Selected Time",
@@ -140,6 +144,71 @@ templ TimePicker() {
 					PreviewCodeFile: "time_picker_form.templ",
 					ID:              "form",
 				})
+			}
+			@modules.ContainerWrapper(modules.ContainerWrapperProps{
+				Title: "Keyboard",
+				ID:    "keyboard",
+			}) {
+				<p class="text-muted-foreground">
+					The hour, minute and AM/PM readings are separate focusable
+					fields, so a time can be typed straight in without opening
+					the dropdown. Each field completes and hands over to the
+					next on its own: typing <code class="text-foreground">9</code> in the hour field
+					fills <code class="text-foreground">09</code> and moves to the minutes, because no
+					second digit could follow.
+				</p>
+				<div class="overflow-x-auto">
+					<table class="w-full text-sm">
+						<thead>
+							<tr class="border-b">
+								<th class="text-left font-medium py-2 pr-4">Key</th>
+								<th class="text-left font-medium py-2">Action</th>
+							</tr>
+						</thead>
+						<tbody class="text-muted-foreground">
+							<tr class="border-b">
+								<td class="py-2 pr-4 font-mono text-foreground">0 – 9</td>
+								<td class="py-2">Type the field's value, advancing once it cannot take another digit.</td>
+							</tr>
+							<tr class="border-b">
+								<td class="py-2 pr-4 font-mono text-foreground">A / P</td>
+								<td class="py-2">Set AM or PM, on the period field of a 12-hour picker.</td>
+							</tr>
+							<tr class="border-b">
+								<td class="py-2 pr-4 font-mono text-foreground">↑ / ↓</td>
+								<td class="py-2">Step the field, wrapping around. Minutes move by <code>Step</code>.</td>
+							</tr>
+							<tr class="border-b">
+								<td class="py-2 pr-4 font-mono text-foreground">← / →</td>
+								<td class="py-2">Move between fields. Tab does too.</td>
+							</tr>
+							<tr class="border-b">
+								<td class="py-2 pr-4 font-mono text-foreground">Home / End</td>
+								<td class="py-2">Jump to the field's lowest or highest value.</td>
+							</tr>
+							<tr class="border-b">
+								<td class="py-2 pr-4 font-mono text-foreground">Backspace</td>
+								<td class="py-2">Empty the field.</td>
+							</tr>
+							<tr class="border-b">
+								<td class="py-2 pr-4 font-mono text-foreground">Alt + ↓ / Alt + ↑</td>
+								<td class="py-2">Open or close the dropdown. Its clock button stays out of the tab order so a form does not gain a stop per picker.</td>
+							</tr>
+							<tr>
+								<td class="py-2 pr-4 font-mono text-foreground">Esc</td>
+								<td class="py-2">Close the dropdown.</td>
+							</tr>
+						</tbody>
+					</table>
+				</div>
+				<p class="text-muted-foreground">
+					A typed time is left alone while it is being entered and
+					settled when focus leaves the field: minutes snap onto
+					<code class="text-foreground">Step</code>, and a time outside
+					<code class="text-foreground">MinTime</code>/<code class="text-foreground">MaxTime</code>
+					is pulled to the nearer bound, so the submitted value is
+					always one the dropdown would also have offered.
+				</p>
 			}
 			@modules.ContainerWrapper(modules.ContainerWrapperProps{
 				Title: "API Reference",
@@ -232,7 +301,42 @@ templ TimePicker() {
 								Name:        "Placeholder",
 								Type:        "string",
 								Default:     "Select time",
-								Description: "Placeholder text when no time is selected.",
+								Description: "Accessible name for the field. An unset field shows the segment placeholders (--:--) rather than this text.",
+								Required:    false,
+							},
+							{
+								Name:        "HourLabel",
+								Type:        "string",
+								Default:     "Hour",
+								Description: "Accessible name for the hour segment, and the heading of the dropdown's hour column.",
+								Required:    false,
+							},
+							{
+								Name:        "MinuteLabel",
+								Type:        "string",
+								Default:     "Minute",
+								Description: "Accessible name for the minute segment, and the heading of the dropdown's minute column.",
+								Required:    false,
+							},
+							{
+								Name:        "PeriodLabel",
+								Type:        "string",
+								Default:     "AM/PM",
+								Description: "Accessible name for the AM/PM segment in 12-hour format.",
+								Required:    false,
+							},
+							{
+								Name:        "OpenLabel",
+								Type:        "string",
+								Default:     "Open time picker",
+								Description: "Accessible name for the button that opens the dropdown.",
+								Required:    false,
+							},
+							{
+								Name:        "DoneLabel",
+								Type:        "string",
+								Default:     "Done",
+								Description: "Text of the dropdown's dismiss button.",
 								Required:    false,
 							},
 							{

@@ -6,8 +6,8 @@ import (
 	"os"
 	"path/filepath"
 
-	"github.com/a-h/templ"
 	"github.com/RimJur/templui/internal/ui/showcase"
+	"github.com/a-h/templ"
 )
 
 func writeHTML(filename string, c templ.Component) error {
@@ -247,14 +247,14 @@ func main() {
 		"out/showcase/textarea_with_label.html":  showcase.TextareaWithLabel(),
 
 		// Time Picker
-		"out/showcase/time_picker_12hour.html":             showcase.TimePicker12Hour(),
-		"out/showcase/time_picker_custom_placeholder.html": showcase.TimePickerCustomPlaceholder(),
-		"out/showcase/time_picker_default.html":            showcase.TimePickerDefault(),
-		"out/showcase/time_picker_form.html":               showcase.TimePickerForm(),
-		"out/showcase/time_picker_label.html":              showcase.TimePickerLabel(),
-		"out/showcase/time_picker_min_max.html":            showcase.TimePickerMinMax(),
-		"out/showcase/time_picker_selected_time.html":      showcase.TimePickerSelectedTime(),
-		"out/showcase/time_picker_step.html":               showcase.TimePickerStep(),
+		"out/showcase/time_picker_12hour.html":        showcase.TimePicker12Hour(),
+		"out/showcase/time_picker_custom_labels.html": showcase.TimePickerCustomLabels(),
+		"out/showcase/time_picker_default.html":       showcase.TimePickerDefault(),
+		"out/showcase/time_picker_form.html":          showcase.TimePickerForm(),
+		"out/showcase/time_picker_label.html":         showcase.TimePickerLabel(),
+		"out/showcase/time_picker_min_max.html":       showcase.TimePickerMinMax(),
+		"out/showcase/time_picker_selected_time.html": showcase.TimePickerSelectedTime(),
+		"out/showcase/time_picker_step.html":          showcase.TimePickerStep(),
 
 		// Toast
 		"out/showcase/toast_default.html":    showcase.ToastDefault(),

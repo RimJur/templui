@@ -11,6 +11,10 @@ import (
 	"time"
 )
 
+// emptySegment is what a segment shows before it holds a value, mirroring the
+// native <input type="time"> placeholder.
+const emptySegment = "--"
+
 type Props struct {
 	ID          string
 	Class       string
@@ -27,6 +31,15 @@ type Props struct {
 	Placeholder string
 	Disabled    bool
 	HasError    bool
+	// HourLabel, MinuteLabel and PeriodLabel name the segments for assistive
+	// technology and title the columns in the dropdown.
+	HourLabel   string
+	MinuteLabel string
+	PeriodLabel string
+	// OpenLabel names the button that opens the dropdown.
+	OpenLabel string
+	// DoneLabel is the dropdown's dismiss button.
+	DoneLabel string
 }
 
 templ TimePicker(props ...Props) {
@@ -50,12 +63,29 @@ templ TimePicker(props ...Props) {
 		if p.PMLabel == "" {
 			p.PMLabel = "PM"
 		}
+		if p.HourLabel == "" {
+			p.HourLabel = "Hour"
+		}
+		if p.MinuteLabel == "" {
+			p.MinuteLabel = "Minute"
+		}
+		if p.PeriodLabel == "" {
+			p.PeriodLabel = "AM/PM"
+		}
+		if p.OpenLabel == "" {
+			p.OpenLabel = "Open time picker"
+		}
+		if p.DoneLabel == "" {
+			p.DoneLabel = "Done"
+		}
 		if p.Step <= 0 {
 			p.Step = 1
 		}
 
+		hasValue := p.Value != (time.Time{})
+
 		var valueString string
-		if p.Value != (time.Time{}) {
+		if hasValue {
 			valueString = p.Value.Format("15:04")
 		}
 		var minTimeString string
@@ -66,9 +96,36 @@ templ TimePicker(props ...Props) {
 		if p.MaxTime != (time.Time{}) {
 			maxTimeString = p.MaxTime.Format("15:04")
 		}
+
+		// Render the segments server-side so a preset value is visible before
+		// the script runs.
+		hourSegment, minuteSegment, periodSegment := emptySegment, emptySegment, emptySegment
+		if hasValue {
+			h := p.Value.Hour()
+			if p.Use12Hours {
+				periodSegment = p.AMLabel
+				if h >= 12 {
+					periodSegment = p.PMLabel
+				}
+				if h%12 == 0 {
+					h = 12
+				} else {
+					h = h % 12
+				}
+			}
+			hourSegment = fmt.Sprintf("%02d", h)
+			minuteSegment = fmt.Sprintf("%02d", p.Value.Minute())
+		}
+
+		hourMax := 23
+		hourMin := 0
+		if p.Use12Hours {
+			hourMax = 12
+			hourMin = 1
+		}
 	}}
 	<div class="relative inline-block w-full" data-tui-timepicker-root>
-		@popover.Root() {
+		@popover.Root(popover.RootProps{ID: p.ID + "-popover"}) {
 			<input
 				type="hidden"
 				name={ p.Name }
@@ -78,46 +135,63 @@ templ TimePicker(props ...Props) {
 				}
 				data-tui-timepicker-hidden-input="true"
 			/>
-			@popover.Trigger() {
-				@button.Button(button.Props{
-					ID:      p.ID,
-					Variant: button.VariantOutline,
-					Class: utils.TwMerge(
+			// The trigger is manual: a click has to distinguish focusing a
+			// segment from opening the dropdown, which popover's own click
+			// handler cannot do (it preventDefaults every click inside).
+			@popover.Trigger(popover.TriggerProps{TriggerType: popover.TriggerTypeManual}) {
+				<div
+					data-tui-timepicker="true"
+					data-tui-timepicker-use12hours={ fmt.Sprintf("%t", p.Use12Hours) }
+					data-tui-timepicker-am-label={ p.AMLabel }
+					data-tui-timepicker-pm-label={ p.PMLabel }
+					data-tui-timepicker-placeholder={ p.Placeholder }
+					data-tui-timepicker-step={ fmt.Sprintf("%d", p.Step) }
+					data-tui-timepicker-min-time={ minTimeString }
+					data-tui-timepicker-max-time={ maxTimeString }
+					role="group"
+					aria-label={ p.Placeholder }
+					if p.Disabled {
+						aria-disabled="true"
+					}
+					if p.HasError {
+						aria-invalid="true"
+					}
+					class={ utils.TwMerge(
 						// Base styles matching input
 						"w-full h-9 px-3 py-1 text-base md:text-sm",
-						"flex items-center justify-between",
+						"flex items-center justify-between gap-2",
 						"rounded-md border border-input bg-transparent shadow-xs transition-[color,box-shadow] outline-none",
 						// Dark mode background
 						"dark:bg-input/30",
-						// Selection styles
-						"selection:bg-primary selection:text-primary-foreground",
-						// Focus styles
-						"focus-visible:border-ring focus-visible:ring-ring/50 focus-visible:ring-[3px]",
+						// Focus styles follow whichever segment holds focus
+						"focus-within:border-ring focus-within:ring-ring/50 focus-within:ring-[3px]",
 						// Error/Invalid styles
 						"aria-invalid:ring-destructive/20 aria-invalid:border-destructive dark:aria-invalid:ring-destructive/40",
 						utils.If(p.HasError, "border-destructive ring-destructive/20 dark:ring-destructive/40"),
+						utils.If(p.Disabled, "opacity-50 cursor-not-allowed"),
 						p.Class,
-					),
-					Disabled: p.Disabled,
-					Attributes: utils.MergeAttributes(p.Attributes, templ.Attributes{
-						"data-tui-timepicker":             "true",
-						"data-tui-timepicker-use12hours":  fmt.Sprintf("%t", p.Use12Hours),
-						"data-tui-timepicker-am-label":    p.AMLabel,
-						"data-tui-timepicker-pm-label":    p.PMLabel,
-						"data-tui-timepicker-placeholder": p.Placeholder,
-						"data-tui-timepicker-step":        fmt.Sprintf("%d", p.Step),
-						"data-tui-timepicker-min-time":    minTimeString,
-						"data-tui-timepicker-max-time":    maxTimeString,
-						"aria-invalid":                    utils.If(p.HasError, "true"),
-					}),
-				}) {
-					<span data-tui-timepicker-display class="text-left grow text-muted-foreground">
-						{ p.Placeholder }
-					</span>
-					<span class="text-muted-foreground flex items-center ml-2">
+					) }
+					{ p.Attributes... }
+				>
+					<div class="flex items-center grow" data-tui-timepicker-segments>
+						@segment(p.ID, "hour", p.HourLabel, hourSegment, hourMin, hourMax, p.Disabled)
+						<span aria-hidden="true" class="text-muted-foreground select-none">:</span>
+						@segment("", "minute", p.MinuteLabel, minuteSegment, 0, 59, p.Disabled)
+						if p.Use12Hours {
+							@segment("", "period", p.PeriodLabel, periodSegment, 0, 1, p.Disabled)
+						}
+					</div>
+					<button
+						type="button"
+						data-tui-timepicker-toggle="true"
+						aria-label={ p.OpenLabel }
+						tabindex="-1"
+						disabled?={ p.Disabled }
+						class="text-muted-foreground flex items-center shrink-0 rounded-sm outline-none hover:text-foreground disabled:cursor-not-allowed"
+					>
 						@icon.Clock(icon.Props{Class: "size-4"})
-					</span>
-				}
+					</button>
+				</div>
 			}
 			@popover.Content(popover.ContentProps{
 				Placement: popover.PlacementBottomStart,
@@ -140,7 +214,7 @@ templ TimePicker(props ...Props) {
 							<div class="grid grid-cols-2 gap-3 mb-4">
 								// Hour selection
 								<div class="space-y-2">
-									<label class="text-sm font-medium">Hour</label>
+									<label class="text-sm font-medium">{ p.HourLabel }</label>
 									<div class="max-h-32 overflow-y-auto border rounded-md bg-background">
 										<div data-tui-timepicker-hour-list="true" class="p-1 space-y-0.5">
 											if p.Use12Hours {
@@ -181,7 +255,7 @@ templ TimePicker(props ...Props) {
 								</div>
 								// Minute selection
 								<div class="space-y-2">
-									<label class="text-sm font-medium">Minute</label>
+									<label class="text-sm font-medium">{ p.MinuteLabel }</label>
 									<div class="max-h-32 overflow-y-auto border rounded-md bg-background">
 										<div data-tui-timepicker-minute-list="true" class="p-1 space-y-0.5">
 											for minute := 0; minute < 60; minute += p.Step {
@@ -230,7 +304,7 @@ templ TimePicker(props ...Props) {
 										"data-tui-timepicker-done": "true",
 									},
 								}) {
-									Done
+									{ p.DoneLabel }
 								}
 							</div>
 						</div>
@@ -239,6 +313,42 @@ templ TimePicker(props ...Props) {
 			}
 		}
 	</div>
+}
+
+// segment renders one typeable field of the time. It is a spinbutton rather
+// than a plain text box: the value is always driven from component state, so
+// the element only ever reports what the state holds.
+templ segment(id, kind, label, value string, min, max int, disabled bool) {
+	<input
+		if id != "" {
+			id={ id }
+		}
+		type="text"
+		data-tui-timepicker-segment={ kind }
+		if kind == "period" {
+			inputmode="text"
+		} else {
+			inputmode="numeric"
+		}
+		role="spinbutton"
+		aria-label={ label }
+		aria-valuemin={ strconv.Itoa(min) }
+		aria-valuemax={ strconv.Itoa(max) }
+		if value != emptySegment {
+			aria-valuenow={ value }
+			aria-valuetext={ value }
+		} else {
+			aria-valuetext={ "Empty " + label }
+		}
+		value={ value }
+		maxlength="2"
+		autocomplete="off"
+		autocorrect="off"
+		autocapitalize="off"
+		spellcheck="false"
+		disabled?={ disabled }
+		class="box-content w-[2ch] shrink-0 rounded-sm px-1 py-0.5 text-center tabular-nums bg-transparent border-0 outline-none caret-transparent selection:bg-transparent focus:bg-primary focus:text-primary-foreground disabled:cursor-not-allowed"
+	/>
 }
 
 var scriptOnce = templ.NewOnceHandle()
