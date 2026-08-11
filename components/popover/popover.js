@@ -8,7 +8,7 @@ import "./floating_ui_dom.js";
   function matchesPopoverOpen(el) {
     if (!el) return false;
     try {
-      return matchesPopoverOpen(el);
+      return el.matches(":popover-open");
     } catch (e) {
       return false;
     }

@@ -5,7 +5,7 @@
   function matchesPopoverOpen(el) {
     if (!el) return false;
     try {
-      return matchesPopoverOpen(el);
+      return el.matches(':popover-open');
     } catch (e) {
       return false;
     }
@@ -104,7 +104,7 @@
   function closePopover(trigger) {
     const root = findRoot(trigger);
     const popoverContent = root?.querySelector('[data-tui-popover-content]');
-    if (!popoverContent?.matches(':popover-open')) return;
+    if (!matchesPopoverOpen(popoverContent)) return;
 
     try {
       popoverContent.hidePopover();
