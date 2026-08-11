@@ -10,11 +10,11 @@ import templruntime "github.com/a-h/templ/runtime"
 
 import (
 	"fmt"
-	"github.com/templui/templui/components/button"
-	"github.com/templui/templui/components/card"
-	"github.com/templui/templui/components/icon"
-	"github.com/templui/templui/components/popover"
-	"github.com/templui/templui/utils"
+	"github.com/RimJur/templui/components/button"
+	"github.com/RimJur/templui/components/card"
+	"github.com/RimJur/templui/components/icon"
+	"github.com/RimJur/templui/components/popover"
+	"github.com/RimJur/templui/utils"
 	"strconv"
 	"time"
 )

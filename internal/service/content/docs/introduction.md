@@ -6,9 +6,9 @@ order: 1
 
 ## Introduction
 
-templUI is a growing collection of beautifully designed components built with templ and Tailwind CSS. You can use it in two ways: install components into your own repo with the CLI, or import component packages directly from `github.com/templui/templui`. Everything is customizable, type-safe, and yours to own.
+templUI is a growing collection of beautifully designed components built with templ and Tailwind CSS. You can use it in two ways: install components into your own repo with the CLI, or import component packages directly from `github.com/RimJur/templui`. Everything is customizable, type-safe, and yours to own.
 
-**Two supported workflows.** Use the CLI if you want the source copied into your app. Use direct imports if you want the simplest setup. Follow our [releases](https://github.com/templui/templui/releases) to see what's new.
+**Two supported workflows.** Use the CLI if you want the source copied into your app. Use direct imports if you want the simplest setup. Follow our [releases](https://github.com/RimJur/templui/releases) to see what's new.
 
 ## Why templUI
 

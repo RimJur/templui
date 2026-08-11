@@ -8,7 +8,7 @@ order: 2
 
 templUI supports two workflows:
 
-- `Import Workflow` for direct Go imports from `github.com/templui/templui`
+- `Import Workflow` for direct Go imports from `github.com/RimJur/templui`
 - `CLI Workflow` for copying components into your own codebase
 
 Use the import workflow when you want the simplest setup. Use the CLI workflow when you want to own the component source in your app. `templui-quickstart` uses the import workflow.
@@ -67,7 +67,7 @@ Use this when you want the simplest setup and prefer importing component package
 ### 1. Add templUI
 
 ```shell
-go get github.com/templui/templui@latest
+go get github.com/RimJur/templui@latest
 ```
 
 You can also just import a component package and run `go mod tidy`.
@@ -218,7 +218,7 @@ tasks:
     desc: Watch Tailwind CSS changes
     cmds:
       - |
-        TEMPLUI_PATH="$(go list -mod=mod -m -f {{`'{{.Dir}}'`}} github.com/templui/templui)" && \
+        TEMPLUI_PATH="$(go list -mod=mod -m -f {{`'{{.Dir}}'`}} github.com/RimJur/templui)" && \
         printf '%s\n' \
           '@source "./**/*.templ";' \
           "@source \"$TEMPLUI_PATH/components/**/*.templ\";" \
@@ -240,7 +240,7 @@ task dev
 ### 4. Import and use a component
 
 ```go
-import "github.com/templui/templui/components/button"
+import "github.com/RimJur/templui/components/button"
 ```
 
 ```templ
@@ -255,7 +255,7 @@ Interactive components load JavaScript explicitly in your layout.
 
 ```go
 import (
-  "github.com/templui/templui/components/datepicker"
+  "github.com/RimJur/templui/components/datepicker"
 )
 ```
 
@@ -326,7 +326,7 @@ Use this when you want templUI to copy component source into your own project fo
 ### 1. Install CLI
 
 ```shell
-go install github.com/templui/templui/cmd/templui@latest
+go install github.com/RimJur/templui/cmd/templui@latest
 templui --version
 ```
 

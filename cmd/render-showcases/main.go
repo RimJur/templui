@@ -7,7 +7,7 @@ import (
 	"path/filepath"
 
 	"github.com/a-h/templ"
-	"github.com/templui/templui/internal/ui/showcase"
+	"github.com/RimJur/templui/internal/ui/showcase"
 )
 
 func writeHTML(filename string, c templ.Component) error {

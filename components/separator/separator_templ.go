@@ -8,7 +8,7 @@ package separator
 import "github.com/a-h/templ"
 import templruntime "github.com/a-h/templ/runtime"
 
-import "github.com/templui/templui/utils"
+import "github.com/RimJur/templui/utils"
 
 type Orientation string
 type Decoration string

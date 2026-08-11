@@ -9,11 +9,11 @@ import "github.com/a-h/templ"
 import templruntime "github.com/a-h/templ/runtime"
 
 import "context"
-import "github.com/templui/templui/utils"
-import "github.com/templui/templui/components/icon"
-import "github.com/templui/templui/components/button"
-import "github.com/templui/templui/components/sheet"
-import "github.com/templui/templui/components/tooltip"
+import "github.com/RimJur/templui/utils"
+import "github.com/RimJur/templui/components/icon"
+import "github.com/RimJur/templui/components/button"
+import "github.com/RimJur/templui/components/sheet"
+import "github.com/RimJur/templui/components/tooltip"
 
 type contextKey string
 

@@ -5,7 +5,7 @@ import (
 	"context"
 	"fmt"
 
-	"github.com/templui/templui/internal/ui/modules"
+	"github.com/RimJur/templui/internal/ui/modules"
 	"github.com/yuin/goldmark"
 	"github.com/yuin/goldmark/ast"
 	"github.com/yuin/goldmark/extension"

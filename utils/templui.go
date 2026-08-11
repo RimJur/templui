@@ -12,7 +12,7 @@ import (
 	"time"
 
 	"github.com/a-h/templ"
-	"github.com/templui/templui/components"
+	"github.com/RimJur/templui/components"
 
 	twmerge "github.com/Oudwins/tailwind-merge-go"
 )

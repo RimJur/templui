@@ -25,7 +25,7 @@ func getVersion() string {
 		// the user's module, templui itself shows up as a dependency with
 		// the real version (#591).
 		for _, dep := range info.Deps {
-			if dep.Path == "github.com/templui/templui" && dep.Version != "" && dep.Version != "(devel)" {
+			if dep.Path == "github.com/RimJur/templui" && dep.Version != "" && dep.Version != "(devel)" {
 				return dep.Version
 			}
 		}

@@ -3,7 +3,7 @@ package shared
 import (
 	"sort"
 
-	"github.com/templui/templui/internal/registry"
+	"github.com/RimJur/templui/internal/registry"
 )
 
 type SideLink struct {

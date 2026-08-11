@@ -9,8 +9,8 @@ import "github.com/a-h/templ"
 import templruntime "github.com/a-h/templ/runtime"
 
 import (
-	"github.com/templui/templui/components/popover"
-	"github.com/templui/templui/utils"
+	"github.com/RimJur/templui/components/popover"
+	"github.com/RimJur/templui/utils"
 )
 
 type Position string

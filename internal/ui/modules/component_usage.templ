@@ -1,6 +1,6 @@
 package modules
 
-import "github.com/templui/templui/components/tabs"
+import "github.com/RimJur/templui/components/tabs"
 
 type ComponentUsageProps struct {
 	ComponentName string
@@ -48,7 +48,7 @@ templ ComponentUsage(props ComponentUsageProps) {
 			componentAlias = "switchcomp"
 		}
 
-		componentImportLine := `"` + "github.com/templui/templui/components/" + props.ComponentName + `"`
+		componentImportLine := `"` + "github.com/RimJur/templui/components/" + props.ComponentName + `"`
 		if componentAlias != props.ComponentName {
 			componentImportLine = componentAlias + " " + componentImportLine
 		}

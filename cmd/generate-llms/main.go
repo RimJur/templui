@@ -108,7 +108,7 @@ Components are designed to be composable, customizable, and easy to integrate in
 - [How to Use](https://templui.io/docs/how-to-use): CLI installation and usage guide
 - [Components](https://templui.io/docs/components): Component overview and catalog
 - [Themes](https://templui.io/docs/themes): Theme customization and styling
-- [GitHub](https://github.com/templui/templui): Source code and issue tracker
+- [GitHub](https://github.com/RimJur/templui): Source code and issue tracker
 
 `)
 

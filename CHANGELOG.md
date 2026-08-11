@@ -195,8 +195,8 @@ The automatic component script injection introduced in `v1.7.x` has been reverte
 
 ### Added
 
-- Import workflow beta: templUI can now be used directly as a Go dependency via `github.com/templui/templui`
-- Restored the dedicated [`templui-quickstart`](https://github.com/templui/templui-quickstart) repository as the fastest way to start a new app
+- Import workflow beta: templUI can now be used directly as a Go dependency via `github.com/RimJur/templui`
+- Restored the dedicated [`templui-quickstart`](https://github.com/RimJur/templui-quickstart) repository as the fastest way to start a new app
 - Simplified the documentation around two clear workflows: `Quickstart` / `Import Workflow` / `CLI Workflow`
 
 ### Changed

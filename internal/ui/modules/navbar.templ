@@ -2,13 +2,13 @@ package modules
 
 import (
 	"fmt"
-	"github.com/templui/templui/components/button"
-	"github.com/templui/templui/components/icon"
-	"github.com/templui/templui/components/separator"
-	"github.com/templui/templui/components/sheet"
-	"github.com/templui/templui/internal/ctxkeys"
-	"github.com/templui/templui/internal/shared"
-	wrappedicon "github.com/templui/templui/internal/ui/icons"
+	"github.com/RimJur/templui/components/button"
+	"github.com/RimJur/templui/components/icon"
+	"github.com/RimJur/templui/components/separator"
+	"github.com/RimJur/templui/components/sheet"
+	"github.com/RimJur/templui/internal/ctxkeys"
+	"github.com/RimJur/templui/internal/shared"
+	wrappedicon "github.com/RimJur/templui/internal/ui/icons"
 )
 
 func formatStars(count int) string {
@@ -57,7 +57,7 @@ templ Navbar() {
 			<div class="flex gap-1 items-center justify-center">
 				@button.Button(button.Props{
 					Variant: button.VariantGhost,
-					Href:    "https://github.com/templui/templui",
+					Href:    "https://github.com/RimJur/templui",
 					Target:  "_blank",
 					Class:   "gap-1",
 				}) {

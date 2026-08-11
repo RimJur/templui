@@ -9,10 +9,10 @@ import "github.com/a-h/templ"
 import templruntime "github.com/a-h/templ/runtime"
 
 import (
-	"github.com/templui/templui/components/badge"
-	"github.com/templui/templui/components/input"
-	"github.com/templui/templui/components/popover"
-	"github.com/templui/templui/utils"
+	"github.com/RimJur/templui/components/badge"
+	"github.com/RimJur/templui/components/input"
+	"github.com/RimJur/templui/components/popover"
+	"github.com/RimJur/templui/utils"
 )
 
 type Props struct {

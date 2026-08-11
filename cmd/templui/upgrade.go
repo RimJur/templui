@@ -40,7 +40,7 @@ func updateCLI(ref string) error {
 		ref = "latest"
 	}
 	fmt.Printf("Updating templUI CLI to ref '%s'...\n", ref)
-	cmd := exec.Command("go", "install", fmt.Sprintf("github.com/templui/templui/cmd/templui@%s", ref))
+	cmd := exec.Command("go", "install", fmt.Sprintf("github.com/RimJur/templui/cmd/templui@%s", ref))
 	output, err := cmd.Output()
 	if err != nil {
 		return err

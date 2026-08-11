@@ -10,7 +10,7 @@ import templruntime "github.com/a-h/templ/runtime"
 
 import (
 	"context"
-	"github.com/templui/templui/utils"
+	"github.com/RimJur/templui/utils"
 )
 
 type Props struct {

@@ -10,8 +10,8 @@ import templruntime "github.com/a-h/templ/runtime"
 
 import (
 	"context"
-	"github.com/templui/templui/components/icon"
-	"github.com/templui/templui/utils"
+	"github.com/RimJur/templui/components/icon"
+	"github.com/RimJur/templui/utils"
 )
 
 type contextKey string
