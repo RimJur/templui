@@ -256,8 +256,10 @@
 
     const label = segment.getAttribute('aria-label') || '';
     if (text === EMPTY) {
+      // The wording comes from the server so it stays in the page's language.
+      const empty = segment.getAttribute('data-tui-timepicker-empty-label') || 'Empty';
       segment.removeAttribute('aria-valuenow');
-      segment.setAttribute('aria-valuetext', label ? `Empty ${label}` : 'Empty');
+      segment.setAttribute('aria-valuetext', label ? `${empty} ${label}` : empty);
     } else {
       segment.setAttribute('aria-valuenow', String(valueNow));
       segment.setAttribute('aria-valuetext', text);

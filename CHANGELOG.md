@@ -11,7 +11,7 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 - timepicker: The time can now be typed. The trigger is a row of focusable hour / minute / AM-PM fields instead of a button, each accepting digits (auto-advancing once no second digit could follow), Arrow keys to step, Home/End, Backspace to clear, and A/P to set the period. The dropdown is unchanged and stays in sync; `Alt`+`↓`/`↑` opens and closes it, and its clock button is out of the tab order so a form does not gain a stop per picker (upstream #385, declined there as needing "a complete rewrite of the component architecture")
 - timepicker: A typed time settles when focus leaves the field — minutes snap onto `Step` and a time outside `MinTime`/`MaxTime` is pulled to the nearer bound — so keyboard entry can only produce values the dropdown would also have offered
-- timepicker: `HourLabel`, `MinuteLabel`, `PeriodLabel`, `OpenLabel` and `DoneLabel` props, so the segments, the opener and the dropdown can be localized. The first two also title the dropdown's columns, which were previously hardcoded English
+- timepicker: `HourLabel`, `MinuteLabel`, `PeriodLabel`, `OpenLabel`, `DoneLabel` and `EmptyLabel` props, so the segments, the opener, the dropdown and the "no value yet" announcement can be localized. The first two also title the dropdown's columns, which were previously hardcoded English
 
 ### Changed
 
@@ -22,6 +22,9 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 - popover, dropdown, selectbox, timepicker: The `:popover-open` guard added for old Safari called itself instead of `el.matches()`, so it recursed until the stack blew and the `catch` returned a flat `false`. In popover.js that left `isOpen()`, the open/close guards and the click-away check believing no popover is ever open; timepicker.js never routed through the guard at all (#583 follow-up)
 - timepicker: Writing the hidden input for a half-filled time no longer feeds its own `input` event back in and clears the segment that still held a value
+- timepicker: `HasError` puts `aria-invalid` on the segments rather than on the wrapper around them. A screen reader reports that state from the control that takes focus, so on the wrapper it was announced to nobody; the box still turns destructive, now via `has-[[aria-invalid]]`, which also picks up an `aria-invalid` set later by a validation library
+- timepicker: The empty-segment announcement no longer hardcodes English `"Empty"` while the labels beside it are translated (see `EmptyLabel`)
+- timepicker: The dropdown's clock button is padded out to the 24×24 WCAG 2.5.8 minimum. It renders a 16px icon, and since the segments took over the rest of the field it had become the only pointer route to the dropdown
 
 ## [v1.12.1] - 2026-06-28
 

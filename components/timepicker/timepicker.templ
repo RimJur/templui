@@ -40,6 +40,10 @@ type Props struct {
 	OpenLabel string
 	// DoneLabel is the dropdown's dismiss button.
 	DoneLabel string
+	// EmptyLabel is how a segment holding no value yet is announced, as
+	// "{EmptyLabel} {HourLabel}". Without it the announcement stays English
+	// while the labels around it are translated.
+	EmptyLabel string
 }
 
 templ TimePicker(props ...Props) {
@@ -77,6 +81,9 @@ templ TimePicker(props ...Props) {
 		}
 		if p.DoneLabel == "" {
 			p.DoneLabel = "Done"
+		}
+		if p.EmptyLabel == "" {
+			p.EmptyLabel = "Empty"
 		}
 		if p.Step <= 0 {
 			p.Step = 1
@@ -153,9 +160,6 @@ templ TimePicker(props ...Props) {
 					if p.Disabled {
 						aria-disabled="true"
 					}
-					if p.HasError {
-						aria-invalid="true"
-					}
 					class={ utils.TwMerge(
 						// Base styles matching input
 						"w-full h-9 px-3 py-1 text-base md:text-sm",
@@ -165,8 +169,10 @@ templ TimePicker(props ...Props) {
 						"dark:bg-input/30",
 						// Focus styles follow whichever segment holds focus
 						"focus-within:border-ring focus-within:ring-ring/50 focus-within:ring-[3px]",
-						// Error/Invalid styles
-						"aria-invalid:ring-destructive/20 aria-invalid:border-destructive dark:aria-invalid:ring-destructive/40",
+						// Error/Invalid styles. aria-invalid now sits on the
+						// segments, so the box follows whichever one carries it
+						// -- including when a validation library sets it later.
+						"has-[[aria-invalid]]:ring-destructive/20 has-[[aria-invalid]]:border-destructive dark:has-[[aria-invalid]]:ring-destructive/40",
 						utils.If(p.HasError, "border-destructive ring-destructive/20 dark:ring-destructive/40"),
 						utils.If(p.Disabled, "opacity-50 cursor-not-allowed"),
 						p.Class,
@@ -174,20 +180,23 @@ templ TimePicker(props ...Props) {
 					{ p.Attributes... }
 				>
 					<div class="flex items-center grow" data-tui-timepicker-segments>
-						@segment(p.ID, "hour", p.HourLabel, hourSegment, hourMin, hourMax, p.Disabled)
+						@segment(p.ID, "hour", p.HourLabel, p.EmptyLabel, hourSegment, hourMin, hourMax, p.Disabled, p.HasError)
 						<span aria-hidden="true" class="text-muted-foreground select-none">:</span>
-						@segment("", "minute", p.MinuteLabel, minuteSegment, 0, 59, p.Disabled)
+						@segment("", "minute", p.MinuteLabel, p.EmptyLabel, minuteSegment, 0, 59, p.Disabled, p.HasError)
 						if p.Use12Hours {
-							@segment("", "period", p.PeriodLabel, periodSegment, 0, 1, p.Disabled)
+							@segment("", "period", p.PeriodLabel, p.EmptyLabel, periodSegment, 0, 1, p.Disabled, p.HasError)
 						}
 					</div>
+					// -m-1 keeps the icon where it was while the hit area grows
+					// to the 24x24 WCAG 2.5.8 minimum; a bare 16px icon was the
+					// only pointer route to the dropdown.
 					<button
 						type="button"
 						data-tui-timepicker-toggle="true"
 						aria-label={ p.OpenLabel }
 						tabindex="-1"
 						disabled?={ p.Disabled }
-						class="text-muted-foreground flex items-center shrink-0 rounded-sm outline-none hover:text-foreground disabled:cursor-not-allowed"
+						class="text-muted-foreground flex items-center justify-center shrink-0 p-1 -m-1 rounded-sm outline-none hover:text-foreground disabled:cursor-not-allowed"
 					>
 						@icon.Clock(icon.Props{Class: "size-4"})
 					</button>
@@ -318,7 +327,11 @@ templ TimePicker(props ...Props) {
 // segment renders one typeable field of the time. It is a spinbutton rather
 // than a plain text box: the value is always driven from component state, so
 // the element only ever reports what the state holds.
-templ segment(id, kind, label, value string, min, max int, disabled bool) {
+//
+// hasError puts aria-invalid on the segments rather than on the wrapper around
+// them, because a screen reader reports that state from the control that takes
+// focus.
+templ segment(id, kind, label, emptyLabel, value string, min, max int, disabled, hasError bool) {
 	<input
 		if id != "" {
 			id={ id }
@@ -332,13 +345,17 @@ templ segment(id, kind, label, value string, min, max int, disabled bool) {
 		}
 		role="spinbutton"
 		aria-label={ label }
+		data-tui-timepicker-empty-label={ emptyLabel }
+		if hasError {
+			aria-invalid="true"
+		}
 		aria-valuemin={ strconv.Itoa(min) }
 		aria-valuemax={ strconv.Itoa(max) }
 		if value != emptySegment {
 			aria-valuenow={ value }
 			aria-valuetext={ value }
 		} else {
-			aria-valuetext={ "Empty " + label }
+			aria-valuetext={ emptyLabel + " " + label }
 		}
 		value={ value }
 		maxlength="2"
