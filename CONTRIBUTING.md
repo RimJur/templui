@@ -1,6 +1,15 @@
 # Contributing to templUI
 
-First off, thank you for considering contributing to templUI! We're excited to have you join our community.
+> **Read this first.** This repository is a maintained but **heavily opinionated** fork of
+> [templui/templui](https://github.com/templui/templui), continuing the v1 line after upstream
+> became [shadcn-templ](https://github.com/axadrn/shadcn-templ). Contributions are welcome, but
+> they are judged against the needs of the applications built on this fork rather than against
+> general-purpose library goals — so a change may be declined here that upstream would have taken,
+> and vice versa. There is no guaranteed review turnaround. If your change is broadly useful and
+> not v1-specific, upstream is likely the better home for it. See the
+> [README](README.md#what-heavily-opinionated-means).
+
+Thank you for considering contributing! The setup below is unchanged from upstream.
 
 ## Development Setup
 
