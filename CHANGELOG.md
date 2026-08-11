@@ -25,6 +25,7 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 - timepicker: `HasError` puts `aria-invalid` on the segments rather than on the wrapper around them. A screen reader reports that state from the control that takes focus, so on the wrapper it was announced to nobody; the box still turns destructive, now via `has-[[aria-invalid]]`, which also picks up an `aria-invalid` set later by a validation library
 - timepicker: The empty-segment announcement no longer hardcodes English `"Empty"` while the labels beside it are translated (see `EmptyLabel`)
 - timepicker: The dropdown's clock button is padded out to the 24×24 WCAG 2.5.8 minimum. It renders a 16px icon, and since the segments took over the rest of the field it had become the only pointer route to the dropdown
+- timepicker: The AM/PM segment no longer clips its label. It was sized `w-[2ch]` like the digit segments, but `ch` is the width of a *zero*, and the letters of a period label are wider — so the box came up ~0.01px short of "AM" and an input clips to nothing rather than truncating, leaving it blank. Its width is now measured from the labels themselves (`AMLabel`, `PMLabel`), so it also holds a translated label of any length rather than any fixed character count
 
 ## [v1.12.1] - 2026-06-28
 

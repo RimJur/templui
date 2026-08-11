@@ -184,7 +184,7 @@ templ TimePicker(props ...Props) {
 						<span aria-hidden="true" class="text-muted-foreground select-none">:</span>
 						@segment("", "minute", p.MinuteLabel, p.EmptyLabel, minuteSegment, 0, 59, p.Disabled, p.HasError)
 						if p.Use12Hours {
-							@segment("", "period", p.PeriodLabel, p.EmptyLabel, periodSegment, 0, 1, p.Disabled, p.HasError)
+							@segment("", "period", p.PeriodLabel, p.EmptyLabel, periodSegment, 0, 1, p.Disabled, p.HasError, p.AMLabel, p.PMLabel, emptySegment)
 						}
 					</div>
 					// -m-1 keeps the icon where it was while the hit area grows
@@ -331,7 +331,34 @@ templ TimePicker(props ...Props) {
 // hasError puts aria-invalid on the segments rather than on the wrapper around
 // them, because a screen reader reports that state from the control that takes
 // focus.
-templ segment(id, kind, label, emptyLabel, value string, min, max int, disabled, hasError bool) {
+// Passing sizers switches the segment from a ch-based width to one measured
+// from those strings. Hours and minutes are digits, so 2ch under tabular-nums
+// is exact; the period reads AM/PM, whose letters are wider than a zero and
+// whose text is caller-supplied, so no ch count can be right for it.
+templ segment(id, kind, label, emptyLabel, value string, min, max int, disabled, hasError bool, sizers ...string) {
+	if len(sizers) > 0 {
+		// Every candidate label rides along invisibly in the same grid cell, so
+		// the column takes the widest of them and the box keeps its size when
+		// the value flips between them.
+		// The input is taken out of flow: a text input carries an intrinsic
+		// width of its own that would otherwise win the column and leave the
+		// box wider than the labels it is meant to fit.
+		<span class="relative grid items-center shrink-0">
+			// px-2 against the input's px-1 leaves 4px of slack in the column.
+			// Matching them exactly sizes the column to the text and sub-pixel
+			// rounding then clips it -- and an input clips to nothing rather
+			// than truncating, so the label vanishes outright.
+			for _, sizer := range sizers {
+				<span aria-hidden="true" class="col-start-1 row-start-1 invisible px-2 py-0.5 text-center whitespace-pre">{ sizer }</span>
+			}
+			@segmentInput(id, kind, label, emptyLabel, value, min, max, disabled, hasError, "absolute inset-0 py-0")
+		</span>
+	} else {
+		@segmentInput(id, kind, label, emptyLabel, value, min, max, disabled, hasError, "box-content w-[2ch] shrink-0 tabular-nums")
+	}
+}
+
+templ segmentInput(id, kind, label, emptyLabel, value string, min, max int, disabled, hasError bool, sizing string) {
 	<input
 		if id != "" {
 			id={ id }
@@ -342,6 +369,7 @@ templ segment(id, kind, label, emptyLabel, value string, min, max int, disabled,
 			inputmode="text"
 		} else {
 			inputmode="numeric"
+			maxlength="2"
 		}
 		role="spinbutton"
 		aria-label={ label }
@@ -358,13 +386,16 @@ templ segment(id, kind, label, emptyLabel, value string, min, max int, disabled,
 			aria-valuetext={ emptyLabel + " " + label }
 		}
 		value={ value }
-		maxlength="2"
+		size="1"
 		autocomplete="off"
 		autocorrect="off"
 		autocapitalize="off"
 		spellcheck="false"
 		disabled?={ disabled }
-		class="box-content w-[2ch] shrink-0 rounded-sm px-1 py-0.5 text-center tabular-nums bg-transparent border-0 outline-none caret-transparent selection:bg-transparent focus:bg-primary focus:text-primary-foreground disabled:cursor-not-allowed"
+		class={ utils.TwMerge(
+			"rounded-sm px-1 py-0.5 text-center bg-transparent border-0 outline-none caret-transparent selection:bg-transparent focus:bg-primary focus:text-primary-foreground disabled:cursor-not-allowed",
+			sizing,
+		) }
 	/>
 }
 
